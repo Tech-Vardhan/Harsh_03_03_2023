@@ -1,0 +1,40 @@
+<div class="container my-5">
+  <form>
+    <div class="mb-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="FieldsetCheck"
+          (click)="data()"
+        />
+        <label class="form-check-label" for="disabledFieldsetCheck">
+          Virtual Program
+        </label>
+      </div>
+    </div>
+  </form>
+  <mat-form-field>
+    <mat-label>Select options</mat-label>
+    <mat-select
+      [(value)]="selectProgram"
+      (selectionChange)="change($event)"
+      multiple
+    >
+      <mat-option
+        *ngFor="let option of allData"
+        [value]="option['programId']"
+        >{{ option["programName"] }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Select options</mat-label>
+    <mat-select multiple>
+      <mat-option *ngFor="let project of FilterData" [value]="project">{{
+        project["projectName"]
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

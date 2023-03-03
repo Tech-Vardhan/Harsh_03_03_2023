@@ -1,0 +1,74 @@
+<div class="container my-5">
+  <form>
+    <div class="mb-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="FieldsetCheck"
+          (click)="getApis()"
+        />
+        <label class="form-check-label" for="disabledFieldsetCheck">
+          Virtual Program
+        </label>
+      </div>
+    </div>
+  </form>
+  <mat-form-field>
+    <mat-label>Select options</mat-label>
+    <mat-select
+      [(value)]="selectedPrograms"
+      multiple
+      (selectionChange)="onSelectionChange($event)"
+    >
+      <mat-option *ngFor="let program of programList" [value]=" program['programId']">{{
+        program['programName']
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+New Message
+import { Component } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
+import { programsinterface } from '../models/programs.interface';
+import { projectinterface } from '../models/projects.interface';
+import { ApiCallsService } from '../services/api-calls.service';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+})
+export class HomeComponent {
+  constructor(private apiService: ApiCallsService) {}
+
+  programList: programsinterface[] = [];
+  projectList: projectinterface[] = [];
+
+  selectedPrograms: string[] = [];
+  selectedProjects: string[] = [];
+
+  reducedArray = this.projectList.reduce((acc: string[], cur) => {
+    const item = this.selectedPrograms.find((x) => x === cur.programID);
+    if (item) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+
+  onSelectionChange(event: MatSelectChange) {
+    this.selectedPrograms = event.value;
+    console.log(this.selectedPrograms);
+  }
+
+  getApis() {
+    this.apiService.getPrograms().subscribe((data) => {
+      this.programList = data;
+      console.log('ProgramList', this.programList);
+    });
+    this.apiService.getProjects().subscribe((data) => {
+      this.projectList = data;
+      console.log('ProjectList', this.projectList);
+    });
+  }
+}
